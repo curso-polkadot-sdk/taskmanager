@@ -17,18 +17,14 @@ fn main() {
         println!("1) Adicionar Tarefa");
         println!("2) Listar Tarefas");
         println!("3) Marcar Tarefa Finalizada");
-        println!("4) Sair");
+        println!("4) Salvar e Sair");
 
         let opcao = io_utils::read_string("Escolha uma opção: ");
 
         match opcao.trim() {
             "1" => manager.adicionar_tarefa(),
             "2" => manager.listar_tarefas(),
-            "3" => {
-                todo!()
-                // tarefa.finalizar();
-                // println!("Tarefa {} completada!", tarefa.titulo);
-            }
+            "3" => manager.concluir_tarefa(),
             "4" => {
                 println!("Saindo...");
                 break;

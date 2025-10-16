@@ -10,10 +10,14 @@ pub struct TaskManager {
 impl TaskManager {
     pub fn new() -> Self {
         Self {
-            tarefas: Self::ler_tarefas(),
+            //tarefas: Self::ler_tarefas(),
+            tarefas: Vec::new(),
         }
     }
 
+    // serde_json
+    // std::fs
+    // std::path
     pub fn ler_tarefas() -> Vec<Tarefa> {
         todo!()
     }
@@ -49,6 +53,21 @@ impl TaskManager {
 
         for tarefa in &self.tarefas {
             println!("{}", tarefa.exibir());
+        }
+    }
+
+    pub fn concluir_tarefa(&mut self) {
+        let titulo = read_string("Título da tarefa a ser concluída: ");
+        match self.tarefas.iter_mut().find(|t| t.titulo == titulo) {
+            Some(tarefa) => {
+                tarefa.finalizar();
+                println!("Tarefa {} completada!", tarefa.titulo);
+                return;
+            },
+            None => {
+                println!("Tarefa não encontrada");
+                return;
+            }        
         }
     }
 }
