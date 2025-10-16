@@ -1,8 +1,11 @@
 use crate::io_utils::read_string;
 use crate::models::{Prioridade, Tarefa};
+use std::fs;
+// use std::path::Path;
 
 use chrono::{NaiveDate, Utc};
 
+const FILE_PATH: &str = "tarefas.json";
 pub struct TaskManager {
     pub tarefas: Vec<Tarefa>,
 }
@@ -10,16 +13,8 @@ pub struct TaskManager {
 impl TaskManager {
     pub fn new() -> Self {
         Self {
-            //tarefas: Self::ler_tarefas(),
-            tarefas: Vec::new(),
+            tarefas: Self::ler_tarefas(),
         }
-    }
-
-    // serde_json
-    // std::fs
-    // std::path
-    pub fn ler_tarefas() -> Vec<Tarefa> {
-        todo!()
     }
 
     pub fn adicionar_tarefa(&mut self) {
@@ -69,5 +64,35 @@ impl TaskManager {
                 return;
             }        
         }
+    }
+
+    pub fn ler_tarefas() -> Vec<Tarefa> {
+        // Verificar se o arquivo existe
+        // if !Path::new(FILE_PATH).exists() {
+        //     return Vec::new();
+        // }
+
+        // Ler os dados do arquivo
+        let data = match fs::read_to_string(FILE_PATH) {
+            Ok(data) => data,
+            Err(_) => {
+                println!("Primeira vez, criando arquivo de tarefas...");
+                return Vec::new();
+            }
+        };
+        // let data = fs::read_to_string(FILE_PATH).expect("Erro ao ler o arquivo");
+
+        // Converter de JSON para o vetor de tarefas (desserializar) from_str
+        serde_json::from_str(&data).expect("Erro ao desserializar")
+
+    }
+
+    pub fn salvar_tarefas(&self) {
+        // Converter para JSON (serializar o vetor de tarefas) to_string_pretty
+        let json = serde_json::to_string_pretty(&self.tarefas).expect("Erro ao serializar");
+        // Salvar no arquivo write do std::fs
+        fs::write(FILE_PATH, json).expect("Erro ao salvar arquivo");
+        // Mostrar mensagem
+        println!("Tarefas salvas com sucesso em {}!", FILE_PATH);
     }
 }

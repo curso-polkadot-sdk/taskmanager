@@ -1,0 +1,22 @@
+[
+  {
+    "titulo": "Aprender ownership",
+    "descricao": "Aprender ownership o mais rápido possível",
+    "categoria": "estudos",
+    "data": "2025-10-17",
+    "prioridade": "Alta",
+    "status": "Pendente"
+  },
+  {
+    "titulo": "Comprar café",
+    "descricao": "Comprar café da marca Pilão",
+    "categoria": "casa",
+    "data": "2025-10-25",
+    "prioridade": "Baixa",
+    "status": {
+      "Concluida": {
+        "data_conclusao": "2025-10-16"
+      }
+    }
+  }
+]

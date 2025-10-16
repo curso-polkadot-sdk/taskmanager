@@ -27,6 +27,7 @@ fn main() {
             "3" => manager.concluir_tarefa(),
             "4" => {
                 println!("Saindo...");
+                manager.salvar_tarefas();
                 break;
             }
             _ => println!("Opção inválida."),
