@@ -47,7 +47,7 @@ impl TaskManager {
         }
 
         for tarefa in &self.tarefas {
-            println!("{}", tarefa.exibir());
+            println!("{}", tarefa);
         }
     }
 
@@ -94,5 +94,26 @@ impl TaskManager {
         fs::write(FILE_PATH, json).expect("Erro ao salvar arquivo");
         // Mostrar mensagem
         println!("Tarefas salvas com sucesso em {}!", FILE_PATH);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::models::Status;
+
+    #[test]
+    fn test_concluir_tarefa() {
+        let mut manager = TaskManager::new();
+        manager.tarefas.push(Tarefa::new(
+            "Test".to_string(),
+            "Desc".to_string(),
+            "Cat".to_string(),
+            Utc::now().date_naive(),
+            Prioridade::Baixa,
+        ));
+        //assert_eq!(manager.tarefas[0].status, Status::Pendente);
+        manager.concluir_tarefa();
+        assert_eq!(manager.tarefas[0].status, Status::Concluida { data_conclusao: Utc::now().date_naive() });
     }
 }
