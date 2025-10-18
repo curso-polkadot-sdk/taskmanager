@@ -1,5 +1,5 @@
 use crate::io_utils::read_string;
-use crate::models::{Prioridade, Tarefa};
+use crate::models::{Prioridade, Tarefa, TarefaError};
 use std::fs;
 // use std::path::Path;
 
@@ -67,11 +67,6 @@ impl TaskManager {
     }
 
     pub fn ler_tarefas() -> Vec<Tarefa> {
-        // Verificar se o arquivo existe
-        // if !Path::new(FILE_PATH).exists() {
-        //     return Vec::new();
-        // }
-
         // Ler os dados do arquivo
         let data = match fs::read_to_string(FILE_PATH) {
             Ok(data) => data,
@@ -80,21 +75,24 @@ impl TaskManager {
                 return Vec::new();
             }
         };
-        // let data = fs::read_to_string(FILE_PATH).expect("Erro ao ler o arquivo");
 
         // Converter de JSON para o vetor de tarefas (desserializar) from_str
         serde_json::from_str(&data).expect("Erro ao desserializar")
 
     }
 
-    pub fn salvar_tarefas(&self) {
+    pub fn salvar_tarefas(&self) -> Result<(), TarefaError>{
         // Converter para JSON (serializar o vetor de tarefas) to_string_pretty
-        let json = serde_json::to_string_pretty(&self.tarefas).expect("Erro ao serializar");
+        let json = serde_json::to_string_pretty(&self.tarefas)?;
         // Salvar no arquivo write do std::fs
-        fs::write(FILE_PATH, json).expect("Erro ao salvar arquivo");
+        fs::write(FILE_PATH, json)?;
         // Mostrar mensagem
         println!("Tarefas salvas com sucesso em {}!", FILE_PATH);
+        Ok(())
     }
+
+    // Criar um erro próprio, ok_or e and_then
+    // pub fn atualizar_prazo
 }
 
 #[cfg(test)]
@@ -105,6 +103,7 @@ mod tests {
     #[test]
     fn test_concluir_tarefa() {
         let mut manager = TaskManager::new();
+        let size = manager.tarefas.len();
         manager.tarefas.push(Tarefa::new(
             "Test".to_string(),
             "Desc".to_string(),
@@ -112,8 +111,7 @@ mod tests {
             Utc::now().date_naive(),
             Prioridade::Baixa,
         ));
-        //assert_eq!(manager.tarefas[0].status, Status::Pendente);
         manager.concluir_tarefa();
-        assert_eq!(manager.tarefas[0].status, Status::Concluida { data_conclusao: Utc::now().date_naive() });
+        assert_eq!(manager.tarefas[size].status, Status::Concluida { data_conclusao: Utc::now().date_naive() });
     }
 }

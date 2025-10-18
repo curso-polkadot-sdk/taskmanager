@@ -27,7 +27,10 @@ fn main() {
             "3" => manager.concluir_tarefa(),
             "4" => {
                 println!("Saindo...");
-                manager.salvar_tarefas();
+                match manager.salvar_tarefas() {
+                    Ok(_) => println!("Tarefas salvas com sucesso."),
+                    Err(e) => println!("Erro ao salvar tarefas: {}", e),
+                }
                 break;
             }
             _ => println!("Opção inválida."),

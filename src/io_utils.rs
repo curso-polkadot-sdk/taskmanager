@@ -2,13 +2,9 @@ use std::io::Write;
 
 pub fn read_string(prompt: &str) -> String {
     print!("{}", prompt);
-    std::io::stdout().flush().unwrap();
+    std::io::stdout().flush().unwrap_or_else(|_| println!("Erro de flush, continuando..."));
     let mut buffer = String::new();
-    match std::io::stdin().read_line(&mut buffer) {
-        Ok(_) => buffer.trim().to_string(),
-        Err(_) => {
-            println!("Erro de leitura");
-            std::process::exit(1);
-        }
-    }
+    std::io::stdin().read_line(&mut buffer).expect("Erro de leitura");
+    
+     buffer.trim().to_string()
 }
