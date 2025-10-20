@@ -93,6 +93,22 @@ impl TaskManager {
 
     // Criar um erro próprio, ok_or e and_then
     // pub fn atualizar_prazo
+    pub fn atualizar_prazo(&mut self) -> Result<(), TarefaError> {
+        let titulo = read_string("Título da tarefa a ser atualizada: ");
+        let nova_data_str = read_string("Nova data de vencimento (DD-MM-AAAA): ");
+        let nova_data = NaiveDate::parse_from_str(&nova_data_str, "%d-%m-%Y")
+            .map_err(|_| TarefaError::DeserializeError("Data inválida".to_string()))?;
+
+        self.tarefas.iter_mut()
+            .find(|t| t.titulo == titulo)
+            .ok_or(TarefaError::TarefaNaoEncontrada)
+            .and_then(|tarefa| {
+                tarefa.data = nova_data;
+                println!("Data de vencimento da tarefa {} atualizada para {}", tarefa.titulo, tarefa.data);
+                Ok(())
+            })
+    }
+
 }
 
 #[cfg(test)]

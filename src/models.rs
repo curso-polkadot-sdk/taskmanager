@@ -73,6 +73,7 @@ impl fmt::Display for Tarefa {
 pub enum TarefaError {
     FileIOError(String),
     DeserializeError(String),
+    TarefaNaoEncontrada,
 }
 
 impl Display for TarefaError {
@@ -80,6 +81,7 @@ impl Display for TarefaError {
         match self {
             TarefaError::FileIOError(msg) => write!(f, "Erro ao tratar o arquivo: {}", msg),
             TarefaError::DeserializeError(msg) => write!(f, "Erro ao desserializar: {}", msg),
+            TarefaError::TarefaNaoEncontrada => write!(f, "Tarefa não encontrada"),
 
         }
     }

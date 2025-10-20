@@ -17,7 +17,8 @@ fn main() {
         println!("1) Adicionar Tarefa");
         println!("2) Listar Tarefas");
         println!("3) Marcar Tarefa Finalizada");
-        println!("4) Salvar e Sair");
+        println!("4) Atualizar Prazo da Tarefa");
+        println!("5) Salvar e Sair");
 
         let opcao = io_utils::read_string("Escolha uma opção: ");
 
@@ -25,7 +26,11 @@ fn main() {
             "1" => manager.adicionar_tarefa(),
             "2" => manager.listar_tarefas(),
             "3" => manager.concluir_tarefa(),
-            "4" => {
+            "4" => match manager.atualizar_prazo() {
+                Ok(_) => (),
+                Err(e) => println!("Erro ao atualizar prazo: {}", e),
+            },
+            "5" => {
                 println!("Saindo...");
                 match manager.salvar_tarefas() {
                     Ok(_) => println!("Tarefas salvas com sucesso."),
