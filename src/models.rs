@@ -1,6 +1,7 @@
 use chrono::{NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
-use std::{fmt, fmt::Display, error::Error};
+use std::{fmt};
+use thiserror::Error;
 
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
@@ -69,25 +70,28 @@ impl fmt::Display for Tarefa {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum TarefaError {
+    #[error("Erro ao tratar o arquivo: {0}")]
     FileIOError(String),
+    #[error("Erro ao desserializar: {0}")]
     DeserializeError(String),
+    #[error("Tarefa não encontrada")]
     TarefaNaoEncontrada,
 }
 
-impl Display for TarefaError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            TarefaError::FileIOError(msg) => write!(f, "Erro ao tratar o arquivo: {}", msg),
-            TarefaError::DeserializeError(msg) => write!(f, "Erro ao desserializar: {}", msg),
-            TarefaError::TarefaNaoEncontrada => write!(f, "Tarefa não encontrada"),
+// impl Display for TarefaError {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         match self {
+//             TarefaError::FileIOError(msg) => write!(f, "Erro ao tratar o arquivo: {}", msg),
+//             TarefaError::DeserializeError(msg) => write!(f, "Erro ao desserializar: {}", msg),
+//             TarefaError::TarefaNaoEncontrada => write!(f, "Tarefa não encontrada"),
 
-        }
-    }
-}
+//         }
+//     }
+// }
 
-impl Error for TarefaError {}
+// impl Error for TarefaError {}
 
 impl From<std::io::Error> for TarefaError {
     fn from(error: std::io::Error) -> Self {
